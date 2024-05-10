@@ -1,0 +1,586 @@
+# %% [markdown]
+# # **CS-331: Introduction to Artificial Intelligence - Spring 2024**
+# 
+# # Assignment 2: Logistic, Lasso, and Ridge Regression
+# 
+# ### Deadline:  12 March 2024 11:55 PM
+# 
+# ### Instructions
+# 
+# 1. The aim of the assignment is to familiarise you with code implementation of concepts covered in class as well as learn thorough data analysis.
+# 
+# 2. All cells must be run once before submission and should $\color{orange}{\text{clearly display the results (graphs/plots/visualizations etc)}}$. Failure to do so will result in deduction of points.
+# 
+# 5. Use procedural programming style and comment your code properly. The grading breakdown has $\color{orange}{\text{five}}$ points reserved for well-commented, modular code. 
+# 
+# ### Submission Instructions
+# 
+# 1. You are required to upload your solutions on LMS in the Assignment tab by the deadline. 
+# 
+# 2. The zip file MUST contain your jupyter notebook file (.ipynb) and python script (.py) files.
+# 
+# 3. **EACH** file should be named as "Name_RollNumber_PA $\color{orange}{\text{x}}$" where $\color{orange}{\text{x = 2}}$ for this assignment. 
+# 
+# ### Late Submission Policy
+# 
+# 1. You can submit upto 2 days late with a 10% deduction penalty (from your final obtained marks) for each late day.
+# 2. $\color{red}{\text{No submission}}$ will be accepted after the late days are over.
+# 2. $\color{red}{\text{No submission}}$ will be accepted via email/Slack, unless announced by the course staff beforehand. It is your responsibility to stay updated with any announcements pertaining to the assignment. 
+# 
+# ### Plagiarism Policy
+# All parts of this assignment are to be done $\color{red}{\text{INDEPENDENTLY}}$. The course stuff will refer any case of plagiarism 
+# from others or the internet immediately to the DC. If you are confused about what
+# constitutes plagiarism, it is your responsibility to consult with the TAs
+# in a timely manner.
+# 
+# ### Vivas
+# 
+# The teaching staff reserves the right to conduct a viva for any student.  
+# 
+# ### Notes
+# The required packages for this assignment are already present in the first cell.
+# 
+# If you are running the noteook on your PC/laptop, it is STRONGLY advised that you install [conda](https://conda.io/projects/conda/en/latest/user-guide/getting-started.html) and work in a conda environment for this and future assignments. This will go a long way in ensuring you do not get dependency conflicts and your system does not slow down (believe me conflics actually happen and have cost me my sanity).
+# 
+# ### Conda Instructions
+# 
+# After installing [conda](https://conda.io/projects/conda/en/latest/user-guide/getting-started.html), open a terminal/command prompt window in the assignment folder and run `conda env create -f environment.yml` command to automatically create an isolated conda environment titled `AI_env` with required packages installed. Then open/restart VSCode to select this environment as the kernel for your notebook. Your first cell should now compile smoothly! 
+# 
+# P.S: You can also check the output of the command `conda list -n AI_env` to see if each required package listed in the `environment.yml` file is present in this environment.
+# 
+# If you are working on Google Colab, you do not need this. In case the `root_mean_squared` function throws an import error, just use the mean squared error with the argument `squared` set to `False`.
+# 
+
+# %%
+# Required packages
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn.metrics import root_mean_squared_error, mean_squared_error # set 'squared' argument to false to get RMSE
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import StandardScaler, PolynomialFeatures
+from sklearn.linear_model import Lasso
+
+# %% [markdown]
+# ## Task 1A: Multinomial Logistic Regression
+# 
+# ### Problem Introduction
+# 
+# This task is intended to give you a solid understanding of logistic regression.
+# 
+# Logistic regression is primarily employed for classification problems. 
+# 
+# **Binary (or simple) logistic regression** deals with scenarios where the dependent variable has two possible outcomes e.g. yes/no, true/false etc. It models the probability of an observation belonging to one of the two categories.
+# 
+# **Multinomial logistic regression** extends binary logistic regression to handle situations with more than two categories (yes/no/maybe) for the dependent variable. It's useful for classification problems involving multiple classes. In this part, you will be implementing a model that can handle classification in one such multiclass case.
+# 
+# ### Dataset
+# The dataset for this task is provided in a csv titled `star_classification.csv`. It consists of 100,000 observations of space taken by the SDSS (Sloan Digital Sky Survey). Every observation is described by 17 feature columns and 1 class column which identifies it to be either a star, galaxy or quasar. Following is the description of each column in the dataset.
+# 
+# **obj_ID** = Object Identifier, the unique value that identifies the object in the image catalog used by the CAS  
+# 
+# **alpha** = Right Ascension angle (at J2000 epoch)  
+# 
+# **delta** = Declination angle (at J2000 epoch)  
+# 
+# **u** = Ultraviolet filter in the photometric system  
+# 
+# **g** = Green filter in the photometric system  
+# 
+# **r** = Red filter in the photometric system  
+# 
+# **i** = Near Infrared filter in the photometric system  
+# 
+# **z** = Infrared filter in the photometric system  
+# 
+# **run_ID** = Run Number used to identify the specific scan  
+# 
+# **rereun_ID** = Rerun Number to specify how the image was processed  
+# 
+# **cam_col** = Camera column to identify the scanline within the run  
+# 
+# **field_ID** = Field number to identify each field  
+# 
+# **spec_obj_ID** = Unique ID used for optical spectroscopic objects (this means that 2 different observations with the same spec_obj_ID must share the output class)  
+# 
+# **class** = Object class (galaxy, star, or quasar object) $\color{green}{\text{-> This column has the labels that your classifier will predict}}$
+# 
+# **redshift** = Redshift value based on the increase in wavelength  
+# 
+# **plate** = Plate ID, identifies each plate in SDSS  
+# 
+# **MJD** = Modified Julian Date, used to indicate when a given piece of SDSS data was taken  
+# 
+# **fiber_ID** = Fiber ID that identifies the fiber that pointed the light at the focal plane in each observation 
+# 
+# ### Task
+# 
+# Your objective will be to build a classifier that can classify the `class` as either `star`, `galaxy` or `quasar` for instances in the test set.
+# 
+# ### Note
+# 
+# You are $\color{red}{\text{NOT}}$ allowed to use `scikit-learn` for any part of this task. 
+
+# %% [markdown]
+# 1. To start off, load the csv as a pandas `DataFrame`, visualize it and report its shape.
+
+# %%
+df = pd.read_csv('star_classification.csv')
+
+print ("Shape of the data frame: ", df.shape)
+
+# %% [markdown]
+# 2. Now split the dataset into train and test sets. Choose the split ratio based on your intuition and knowledge. 
+
+# %%
+jumbled_df = df.sample(frac=1, random_state=42).reset_index(drop=True)
+
+total_Rows = len(jumbled_df)
+print ("rows: ", total_Rows)
+training_size = int(0.7 * total_Rows)
+
+training_set = jumbled_df.iloc[:training_size]
+testing_set = jumbled_df.iloc[training_size:]
+
+training_set.reset_index(drop=True, inplace=True)
+testing_set.reset_index(drop=True, inplace=True)
+
+print ("Shape of the training set: ", training_set.shape)
+print ("Shape of the testing set: ", testing_set.shape)
+
+# %% [markdown]
+# Now that you have loaded the data and understood its structure, you will do some preprocessing to get features and class labels/categories for use with your classifier:
+# 
+# 1. Make new DataFrames labelled `X_train` and `X_test` that have the feature columns only. Remove any features that you consider irrelevant for training the classifier. You could use trial and error to observe which set of attributes give you the best accuracy. (HINT: Check the dataset description given earlier to decide which columns might be dropped). 
+# 
+# 2. Normalize both train and test feature matrices. (Caveat: make sure to normalize test set appropriately). 
+# 
+# 3. Report normalized `X_train` and `X_test` shape and state what each dimension of shape represents. 
+# 
+# 4. Incorporate a bias vector of appropriate shape (determine this yourself) to the normalized feature matrices.
+# 
+# 5. Report first instance of normalized train and test feature matrices before and after adding the bias vector.
+
+# %%
+# 1) EXTRACTING RELEVANT FEATURES
+
+#                     2        3      4    5    6    7    8        15        16     17        18      
+feature_columns = ['alpha', 'delta', 'u', 'g', 'r', 'i', 'z', 'redshift', 'plate', 'MJD', 'fiber_ID']
+
+X_train = training_set[feature_columns]
+X_test = testing_set[feature_columns]
+
+# 2) NORMALIZING TRAINING AND TESTING DATA
+
+def normalize_data(data, mean, stdev):
+    normalized_data = (data-mean)/stdev
+    return normalized_data
+
+X_train_mean = X_train.mean()
+X_train_stdev = X_train.std()
+
+X_train_normalized = normalize_data(X_train, X_train_mean, X_train_stdev)
+#print (X_train_normalized)
+X_test_normalized = normalize_data(X_test, X_train_mean, X_train_stdev)
+#print (X_test_normalized)
+
+# 3) SHAPE OF X_TRAIN AND X_TEST AND WHAT EACH REPRESENTS
+
+print ("Shape of X_train: ", X_train.shape)
+print ("Shape of X_test: ", X_test.shape)
+print ("Shape of X_train_normalized: ", X_train_normalized.shape)
+print ("Shape of X_test_normalized: ", X_test_normalized.shape)
+
+print ("\n \nDimensions of X_train: \n")
+print ("The x-coordinate represents the number of rows, i.e the number of samples in the training set. ")
+print ("The y-coordinate represents the number of columns, i.e the number of input features in the training set. \n")
+print ("Dimensions of X_test: \n")
+print ("The x-coordinate represents the number of rows, i.e the number of samples in the testing set. ")
+print ("The y-coordinate represents the number of columns, i.e the number of input features in the testing set. \n")
+
+# 4) INCORPORATION OF BIAS VECTOR INTO NORMALIZED FEATURE MATRIX
+
+X_train_normalized['bias'] = 1
+X_test_normalized['bias'] = 1
+
+X_train_normalized_after_bias = X_train_normalized[['bias'] + list(X_train_normalized.columns[:-1])]
+X_test_normalized_after_bias = X_test_normalized[['bias'] + list(X_test_normalized.columns[:-1])]
+
+#print (X_train_normalized_after_bias)
+#print (X_test_normalized_after_bias)
+
+print("Shape of X_train_normalized with bias:", X_train_normalized_after_bias.shape)
+print("Shape of X_test_normalized with bias:", X_test_normalized_after_bias.shape)
+
+# 5) REPORTING FIRST INSTANCE OF NORMALIZED TRAIN AND TEST FEATURE MATRICES BEFORE AND AFTER ADDING THE BIAS VECTOR.
+
+print("\n \nFirst instance of X_train_normalized before adding bias: ")
+print(X_train_normalized.iloc[0])
+
+print("\nFirst instance of X_test_normalized before adding bias: ")
+print(X_test_normalized.iloc[0])
+
+print("\nFirst instance of X_train_normalized after adding bias:")
+print(X_train_normalized_after_bias.iloc[0])
+
+print("\nFirst instance of X_test_normalized after adding bias:")
+print(X_test_normalized_after_bias.iloc[0])
+
+
+
+# %% [markdown]
+# 6. Extract the class labels from both train and test dataset, and convert to NumPy array for faster preprocessing. Label these `y_train` and `y_test`. (HINT: Check dataset description to see which column to extract).
+# 
+# 7. Report `y_train` and `y_test` shape and state what each dimension of shape represents.
+
+# %%
+y_train = training_set['class'].to_numpy()
+y_test = testing_set['class'].to_numpy()
+
+print (y_train)
+print (y_test)
+
+print("Shape of y_train:", y_train.shape)
+print("Shape of y_test:", y_test.shape)
+
+# %% [markdown]
+# As you would have seen, `y_train` and `y_test` have class labels/categories in string format right now. However, many machine learning algorithms, such as logistic regression, support only numerical input features. They are designed to perform mathematical operations on numerical data, such as addition, subtraction, and multiplication. Therefore, we will first encode these string labels as integers, and then one-hot encode them.
+# 
+# 7. Create a mapping that converts the current class labels to integers e.g. Class1: 0, Class2: 1 etc
+# 
+# 8. Use the mapping to create updated `y_train` and `y_test`. 
+
+# %%
+mapping = {'GALAXY': 0, 'STAR': 1, 'QSO': 2}
+
+y_train_encoded = np.array([mapping[label] for label in y_train])
+y_test_encoded = np.array([mapping[label] for label in y_test])
+
+print("Encoded class labels for y_train:")
+print(y_train_encoded)
+print("\nEncoded class labels for y_test:")
+print(y_test_encoded)
+
+
+# %% [markdown]
+# Currently, our updated `y_train` and `y_test` are represented by integers. However, using this ordinal encoding (assigning integers to categories) may introduce an inherent order or magnitude between categories that does not exist in the original data. 
+# 
+# One-hot encoding avoids this issue by representing each category as a separate binary variable, thereby treating them as equally important and removing any ordinal bias. In logistic regression, when dealing with multiple classes, one-hot encoding enables the model to predict probabilities for each class independently. Each class is represented by its own binary variable, and the model learns separate coefficients for each class, allowing it to make predictions across multiple classes.
+# 
+# Example:  If `y_train = [0,0,1,2]` then one-hot encoded representation of this vector would be: `[[1,0,0], [1,0,0], [0,1,0], [0,0,1]]`
+# 
+# 9. Write a function to one-hot encode the labels.
+# 
+# 10. Call the function to get one-hot encoded labels for both train and test sets.
+
+# %%
+def one_hot_encode(array, num_classes):
+
+    n_samples = len(array)
+    one_hot_encoded = np.zeros((n_samples, num_classes))
+    
+    for i in range(n_samples):
+        class_index = array[i]
+        one_hot_encoded[i, class_index] = 1
+    
+    return one_hot_encoded
+
+n = 3  # number of classes: star, galaxy, QSO
+y_train_one_hot_encoded = one_hot_encode(y_train_encoded, n)
+y_test_one_hot_encoded = one_hot_encode(y_test_encoded, n)
+
+
+print(y_train_encoded)
+print("One-hot encoded labels for y_train: ")
+print(y_train_one_hot_encoded)
+print("One-hot encoded labels for y_test: ")
+print(y_test_one_hot_encoded)
+
+
+# %% [markdown]
+# Report first 10 instances of:
+# 
+# 1. Your original `y_train` and `y_test` arrays.
+# 2. Your integer-encoded `y_train` and `y_test` arrays. 
+# 3. Your one-hot encoded `y_train` and `y_test` arrays. 
+# 
+# (Note how reporting this can help you understand your arrays properly and verify that they are correctly structured too)
+
+# %%
+# Original y_train and y_test arrays:
+print("First 10 instances of original y_train:")
+print(y_train[:10])
+print("\nFirst 10 instances of original y_test:")
+print(y_test[:10])
+
+# Integer-encoded y_train and y_test arrays:
+print("\nFirst 10 instances of integer-encoded y_train:")
+print(y_train_encoded[:10])
+print("\nFirst 10 instances of integer-encoded y_test:")
+print(y_test_encoded[:10])
+
+# One-hot encoded y_train and y_test arrays:
+print("\nFirst 10 instances of one-hot encoded y_train:")
+print(y_train_one_hot_encoded[:10])
+print("\nFirst 10 instances of one-hot encoded y_test:")
+print(y_test_one_hot_encoded[:10])
+
+
+# %% [markdown]
+# You are now ready to use the above matrices/arrays to implement your classifier and evaluate it on the test set. 
+# Please feel free to create as many cells as you need for modularity. 
+# 
+# Remember there are 5 points for well-commented/structured code. 
+# 
+# ### Implement the following:
+# 
+#  * Softmax function
+#  * Cross-entropy loss function
+#  * Batch Gradient Descent function
+#  * Prediction function that predicts output class using learned logistic regression (choose the highest probability class)
+#  * Evaluation function that calculates classification accuracy on test set 
+#  * Report plots with no. of iterations/epochs on x-axis and training/validation loss on y-axis.
+
+# %%
+ # 1) SOFTMAX FUNCTION
+
+def softmax(z):
+    softmax_array = np.exp(z)
+    sum = np.sum(softmax_array)
+    
+    for i in range(len(z)):
+        softmax_array[i] = softmax_array[i]/(sum)
+    return softmax_array
+
+def cross_entropy_loss(y_actual, y_predicted):
+    loss = -np.mean(np.sum((y_actual * np.log(y_predicted)) + ((1-y_actual) * np.log(1 - y_predicted))), axis=1)
+    return loss
+
+def batch_gradient_descent(X, y, thetas, alpha, epochs):
+    m = len(y)
+    J = []
+    
+    for i in range (epochs):
+        y_initial = np.dot(X, thetas)
+        y_predicted = softmax(y_initial)
+        error = y_predicted - y
+        gradient = np.dot(X.T, error) / m
+        theta = theta - (alpha * gradient)
+        
+        loss = cross_entropy_loss(y, y_predicted)
+        J.append(loss)
+        print(f"Iteration {i}: Loss {loss}")
+    return thetas, J
+
+def predict_output_class (X, thetas):
+    y_initial = np.dot(X, thetas)
+    probs = softmax(y_initial)
+    return np.argmax(probs, axis=1)
+
+def classification_accuracy(y_actual, y_predicted):
+    count = 0
+    for i in range (len(y_actual)):
+        if (y_actual[i] == y_predicted[i]):
+            count = count + 1
+    accuracy = (count/len(y_actual))*100
+    print ("Accuracy: ", accuracy, " %")
+    return accuracy
+
+def plot_graph (epochs, loss_array):
+#    plt.plot(epochs, training_loss, 'bo', ms=10, mec='k')
+#    plt.ylabel('Loss')
+#    plt.xlabel('Epochs')
+#    plt.plot(epochs, training_loss, '-')
+#    plt.legend(['Training data', 'Sotmax regression'])
+#    plt.show()
+    plt.plot(np.arange(1,n_epoch),J[1:])
+    plt.xlabel("number of epochs")
+    plt.ylabel("cost")          
+
+thetas = [0.5]*12
+thetas = np.array(thetas).reshape(-1,1)
+n_epoch = 1000
+learning_rate = 0.01
+thetas, J= batch_gradient_descent(X_train_normalized_after_bias, y_train_encoded, thetas, learning_rate, n_epoch) 
+plot_graph(n_epoch, J)
+
+# %% [markdown]
+# ## Task 1B: Reflection Questions
+# 
+# #### 1. How did normalization help in our case? Why did we need it? 
+# 
+# Normalization helps in improving the covergence of algorithms faster during training. By scaling the features to a similar range, the training algorithm converges more quickly. Secondly, normalization ensures that all features contribute equally to the learning process of the model. Without normalization, some features with larger magnitudes (eg: alpha) may dominate the learning process as compared to features with smaller magnitudes (eg: redshift, u, g), potentially leading to bias in the predictions of the model.
+# #### 2. What function instead of Softmax would we have used if this was a binary classification problem? How does softmax differ from it? 
+# 
+# In binary classification, the sigmoid function is used instead of the softmax function. The first difference between the sigmoid function and the softmax function is that the sigmoid function is used only for binary classification whereas the softmax function can be used for multiclass classification. Secondly, the sigmoid function outputs a single probability that an input belongs to the positive class whereas the softmax function normalizes the input values into a probability distribution, where each class probability is between 0 and 1, the sum of all classes is 1, and the max value represents the likelihood of the input feature belonging to a certain class. 
+
+# %% [markdown]
+# ## Task 2: Regularization - Ridge Regression
+# 
+# ### Problem Introduction
+# 
+# This task is intended to familiarise you with regularization in the context of linear regression **(recall that you have implemented Linear Regression in PA1, it will be needed again here)**.
+# 
+# While training regression models, it is useful to ensure that there are some constraints on the weights learnt. These constraints are usually defined by some kind of penalty function included in the overall loss function. Generally, penalizing the norm of our weights means that during the training process, our model will prefer smaller values of weights.
+# 
+# We shall look at two types of regularization techniques. The first is Ridge Regression:
+# \begin{equation*}
+# \mathcal{L} = \frac{1}{N}(y - X\mathbf{w})^{2} + \lambda (\mathbf{w})^{2}
+# \end{equation*}
+# 
+# The second is Lasso Regression:
+# \begin{equation*}
+# \mathcal{L} = \frac{1}{N}(y - X\mathbf{w})^{2} + \lambda |\mathbf{w}|
+# \end{equation*}
+# 
+# The L2 penalty on the weights penalizes larger values more than smaller ones while the L1 penalty penalizes all kinds of weights equally. The L1 penalty is also used to promote sparsity in the learnt weights (i.e. make certain weights which do not have a strong correlation with the data).
+# 
+# Please also note, for regularization to function properly, input **data must be normalized** to have zero mean and unit variance. We will be using StandardScaler() for it.
+# 
+# ### Dataset
+# 
+# The dataset for this part is provided in a csv titled `auto_mpg.csv`. 
+# 
+# ### Task
+# 
+# Your task is to implement a linear regression model to predict car `displacement` using the feature `mpg`. You will test different values of regularization parameter (`lambd`) to see which value gives the lowest training and testing loss.
+
+# %% [markdown]
+# 1. To begin, load the `auto_mpg_dataset.csv` dataset into a pandas DataFrame, visualize it and report its shape.
+
+# %%
+## YOUR CODE HERE ##
+
+# %% [markdown]
+# 2. Extract the columns `mpg` and `displacement` and normalize these features by using a builtin function `StandardScaler()`. (You may need to clean the data for Null/NAN values before normalizing).
+
+# %%
+## YOUR CODE HERE ##
+
+# %% [markdown]
+# 3. Split your data into train and test sets. You may make use of the `train_test_split` function from the scikit-learn library for this. The documentation for this function can be found [here](https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.train_test_split.html#sklearn.model_selection.train_test_split). Make sure that you use a 80-20 split meaning 80% should be the training set and 20% should be for the test set.
+
+# %%
+## YOUR CODE HERE ##
+
+# %% [markdown]
+# You shall now use gradient descent and analytical solution to fit model parameters. To do so, you must complete the `LinearRegression` class provided. This class should work for Ridge Regression (HINT : Gradient Calculations are different). 
+# 
+# Furthermore, it should be able to compute solutions `analytically` (also provided in sir's notes) as below
+# 
+# \begin{equation*}
+# (X^T X)^{-1} \cdot (X^T Y)
+# \end{equation*} 
+# 
+# as well as via gradient descent. 
+# 
+# A function to generate the feature matrix for a specified polynomial degree has been provided.
+
+# %%
+class LinearRegression:
+    """
+    A class to perform linear regression
+
+    Methods:
+        __init__(self, lambd, degree)                                                  : Initializes the LinearRegression instance.
+        _normalize_input(self, x)                                                      :
+        _generate_X(self, x)                                                           : Generate the matrix X containing samples of data upto the degree specified.
+                                                                                         Bias term is included (i.e. first column is all ones).
+        analytical_solution(self, x, y)                                                : Find the analytical solution for model weights which minimizes mean square error
+        gradient_descent_solution(self, x, y, learning_rate, num_iterations, tol=1e-4) : Find a gradient descent based solution for model weights which minimizes mean square error.
+    """
+    def __init__(self, lambd, degree):
+
+        self.lambd = lambd
+        self.degree = degree
+
+    def _generate_X(self, x):
+        """
+        Generate the matrix X containing samples of data upto the degree specified.
+        Bias term is included (i.e. first column is all ones).
+
+        Args:
+            x (numpy.ndarray) : Input data of shape (num_points, 1)
+
+        Returns:
+            X (numpy.ndarray) : Matrix of shape (num_points, degree+1)
+        """
+        polynomial_features = PolynomialFeatures(degree=self.degree)
+        X = polynomial_features.fit_transform(x)
+        return X
+
+    def analytical_solution(self, x, y): 
+        """
+        Find the analytical solution for model weights which minimizes mean square error
+
+        Args:
+            x (numpy.ndarray) : x values of data
+            y (numpy.ndarray) : y values of data
+
+        Returns:
+            w                 : list of optimal weights for regression
+        """
+        ## YOUR CODE HERE ##
+        raise NotImplementedError
+
+    def gradient_descent_solution(self, x, y, learning_rate, num_iterations, tol=1e-4):
+        """
+        Find a gradient descent based solution for model weights which minimizes mean square error.
+
+        Args:
+            x (numpy.ndarray)    : x values of data
+            y (numpy.ndarray)    : y values of data
+            learning_rate (float): Learning rate for each gradient descent step
+            num_iterations (int) : Number of iterations to perform before returning
+            tol (float)          : value of epsilon s.t. when ||grad(f(x))||_{2} < epsilon, the algorithm terminates
+
+        Returns:
+        w               : list of optimal weights for regression
+        """
+        ## YOUR CODE HERE ##
+
+        raise NotImplementedError
+
+# %% [markdown]
+# 5. Use the LinearRegression class you have implemented above to compute weights using analytical and gradient descent solutions for each value of lambd. Using these computed weights, predict the displacement (this will be Y_predicted). Also plot the curves showing training and testing RMSE`(Y - Y_predicted)^2` for each value of `lambd`. We'll be taking a polynomial of `degree 3 with 100 values of lambda ranging from 0 to 10`.
+
+# %%
+## YOUR CODE HERE ##
+
+# %% [markdown]
+# 6. Plot the output of the model with the least validation RMSE overlaid on top of the original data (mpg vs displacement).
+
+# %%
+## YOUR CODE HERE ##
+
+# %% [markdown]
+# 6. What do you notice about the effect of varying $\lambda$ on dataset (the effect on the training/testing loss)?       
+# $\color{green}{\text{Answer:}}$ Double click `here` to answer.
+
+# %% [markdown]
+# 
+# 7. If you were to vary `learning rate` on dataset, what effect do you think if would have on the training/testing loss?                                                               
+# $\color{green}{\text{Answer:}}$ Double click `here` to answer.
+
+# %% [markdown]
+# ## Task 3: Regularization - Lasso Regression (with sci-kit learn)
+# 
+# Now we'll be using the scikit-learn library to perform Lasso regression using different values of alpha to learn the relationship between $y$: fuel average / mpg of different cars and $\mathbf{x}$: displacement in the `auto_mpg` dataset. You may create your own version of the `generate_X` function from the class implemented above to experiment with models that are non-linear _in features_. Also, do not forget to normalize your input data. A good way to implement all of these in one go is to make a scikit-learn [pipeline](https://scikit-learn.org/stable/modules/generated/sklearn.pipeline.Pipeline.html). Alpha values list is given.
+# 
+# 1. Print the coefficients learnt by Lasso model for each value of alpha given. Is there anything particular about the change in coefficients learnt by Lasso regression with different values of alpha?
+# 
+
+# %%
+alpha_values = [10 ,1, 0.1, 0.01, 0.001, 0.0001]
+## YOUR CODE HERE ##
+
+# %% [markdown]
+# 2. We will be using the coefficents (computed above) and see which of them provide us with minimum RMSE (same as we computed for ridge regression). Plot the output of the model (Lasso) with the least validation RMSE overlaid on top of the original data. Do not forget to report both training and testing RMSE plots for the values of alpha.
+
+# %%
+## YOUR CODE HERE ##
+
+# %% [markdown]
+# # **THE END :)**
+
+
