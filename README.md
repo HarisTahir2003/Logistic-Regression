@@ -74,16 +74,16 @@ It's recommended to run this notebook in a conda environment to avoid dependency
 
 The notebook is organized into the following sections:
 
-Introduction: Overview of the project and logistic regression. <br>
+Introduction: Overview of the project and logistic regression. <br> <br>
 Task 1A: Multinomial Logistic Regression <br>
-&emsp; Data Loading and Preprocessing: Steps to load and preprocess the dataset. <br>
-&emsp; Model Training: Training the logistic regression model. <br>
-&emsp; Model Evaluation: Evaluating the model performance. <br> <br>
+&emsp; 1) Data Loading and Preprocessing: Steps to load and preprocess the dataset. <br>
+&emsp; 2) Model Training: Training the logistic regression model. <br>
+&emsp; 3) Model Evaluation: Evaluating the model performance. <br> <br>
 Task 1B: Reflection Questions related to the logistic regression task <br> <br>
 Task 2: Ridge Regression <br>
-&emsp; Data Loading and Preprocessing: Steps to load and preprocess the dataset. <br>
-&emsp; Model Training: Training the ridge regression model. <br>
-&emsp; Model Evaluation: Evaluating the model performance using plots and some reflection questions <br>
+&emsp; 1) Data Loading and Preprocessing: Steps to load and preprocess the dataset. <br>
+&emsp; 2) Model Training: Training the ridge regression model. <br>
+&emsp; 3) Model Evaluation: Evaluating the model performance using plots and some reflection questions <br>
 
 
 
