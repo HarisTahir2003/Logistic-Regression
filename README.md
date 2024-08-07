@@ -102,10 +102,8 @@ The dataset for the first task is provided in a csv titled `star_classification.
 - **Instances:** 100,000
 - **Input Features:** 17 
 - **Output:** Class
-
-<br> <br>
-
-The dataset for the second part is provided in a .csv file titled `auto_mpg.csv`.
+<br>
+The dataset for the second part is provided in a .csv file titled `auto_mpg.csv`. <br>
  Dataset Summary:
 - **Feature Type:** Varies
 - **Instances:** 398
