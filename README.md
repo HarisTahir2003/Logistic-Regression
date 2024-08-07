@@ -95,14 +95,22 @@ Task 2: Ridge Regression <br>
 
 ## Data
 
-The dataset used in this notebook is a .csv file.  
-- The `temperatures.csv` dataset is designed for bias correction of next-day maximum and minimum air temperature forecasts produced by the Local Data Assimilation and Prediction System (LDAPS) operated by the Korea Meteorological Administration. <br> <br>
+The dataset for the first task is provided in a csv titled `star_classification.csv`. It consists of 100,000 observations of space taken by the SDSS (Sloan Digital Sky Survey). Every observation is described by 17 feature columns and 1 class column which identifies it to be either a star, galaxy or quasar.  <br> 
 
-Dataset Summary:
-- **Feature Type:** Real
-- **Instances:** 7586
-- **Input Features:** 21 (including present-day temperature data, LDAPS model forecasts, and geographical information)
-- **Output:** Next-day maximum (Next_Tmax)
+ Dataset Summary:
+- **Feature Type:** Varies
+- **Instances:** 100,000
+- **Input Features:** 17 
+- **Output:** Class
+
+<br> <br>
+
+The dataset for the second part is provided in a .csv file titled `auto_mpg.csv`.
+ Dataset Summary:
+- **Feature Type:** Varies
+- **Instances:** 398
+- **Input Feature:** mpg
+- **Output:** displacement
 
 
 ## Training and Visualization
