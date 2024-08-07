@@ -59,13 +59,13 @@ Useful Links for installing Jupyter Notebook:
 - https://www.youtube.com/watch?v=9V7AoX0TvSM (Windows)
 
 It's recommended to run this notebook in a conda environment to avoid dependency conflicts and to ensure smooth execution.
-<h5> Conda Environment Setup </h5>
+<h4> Conda Environment Setup </h4>
 <ul> 
    <li> Install conda </li>
    <li> Open a terminal/command prompt window in the assignment folder. </li>
    <li> Run the following command to create an isolated conda environment titled AI_env with the required packages installed: conda env create -f environment.yml </li>
    <li> Open or restart your Jupyter Notebook server or VSCode to select this environment as the kernel for your notebook. </li>
-   <li> Verify the installation by running: ```bash conda list -n AI_env ``` </li>
+   <li> Verify the installation by running: conda list -n AI_env </li>
    <li> Install conda </li>
 </ul>
 
@@ -74,11 +74,17 @@ It's recommended to run this notebook in a conda environment to avoid dependency
 
 The notebook is organized into the following sections:
 
-Introduction: Overview of the project and linear regression.
-Data Loading and Preprocessing: Steps to load and preprocess the dataset.
-Model Training: Training the linear regression model.
-Model Evaluation: Evaluating the model performance.
-Visualization: Plotting the results to visualize the model performance.
+Introduction: Overview of the project and logistic regression.
+Task 1A: Multinomial Logistic Regression
+&emsp; Data Loading and Preprocessing: Steps to load and preprocess the dataset.
+&emsp; Model Training: Training the logistic regression model.
+&emsp; Model Evaluation: Evaluating the model performance.
+Task 1B: Reflection Questions related to the logistic regression task
+Task 2: Ridge Regression
+&emsp; Data Loading and Preprocessing: Steps to load and preprocess the dataset.
+&emsp; Model Training: Training the ridge regression model.
+&emsp; Model Evaluation: Evaluating the model performance using plots and some reflection questions
+
 
 
 ## Data
