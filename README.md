@@ -105,10 +105,12 @@ The dataset for the first task is provided in a csv titled `star_classification.
 <br>
 The dataset for the second part is provided in a .csv file titled `auto_mpg.csv`. <br>
  Dataset Summary:
-- **Feature Type:** Varies
-- **Instances:** 398
-- **Input Feature:** mpg
-- **Output:** displacement
+<ul>
+<li> Feature Type: Varies </li>
+<li> Instances: 398 </li>
+<li> Input Feature: mpg </li>
+<li> Output: displacement </li>
+</ul>
 
 
 ## Training and Visualization
