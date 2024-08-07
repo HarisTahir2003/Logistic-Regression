@@ -28,7 +28,7 @@ The Logistic Regression folder contains the following files:
    
 ## Introduction
 
-Logistic regression is a statistical method used for binary or multi-class classification that models the relationship between a dependent binary variable and one or more independent variables. Unlike linear regression, which predicts continuous outcomes, logistic regression predicts the probability of an outcome.
+Logistic regression is a Machine Learning technique used for binary or multi-class classification that models the relationship between a dependent binary/multi-class variable and one or more independent variables. Unlike linear regression, which predicts continuous outcomes, logistic regression predicts the probability of an outcome.
 
  This assignment provides a clear and concise example of how to implement multi-class logistic regression from scratch using Python.
 ## Installation Requirements
@@ -91,11 +91,9 @@ Task 2: Ridge Regression <br>
 
 </ul>
 
-
-
 ## Data
 
-The dataset for the first task is provided in a csv titled `star_classification.csv`. It consists of 100,000 observations of space taken by the SDSS (Sloan Digital Sky Survey). Every observation is described by 17 feature columns and 1 class column which identifies it to be either a star, galaxy or quasar.  <br> 
+The dataset for the first task is provided in a csv file titled `star_classification.csv`. It consists of 100,000 observations of space taken by the SDSS (Sloan Digital Sky Survey). Every observation is described by 17 feature columns and 1 class column which identifies it to be either a star, galaxy or quasar.  <br> 
 
  Dataset Summary:
 - **Feature Type:** Varies
@@ -103,7 +101,7 @@ The dataset for the first task is provided in a csv titled `star_classification.
 - **Input Features:** 17 
 - **Output:** Class
 <br>
-The dataset for the second part is provided in a .csv file titled `auto_mpg.csv`. <br>
+The dataset for the second part is provided in a csv file titled `auto_mpg.csv`. <br>
  Dataset Summary:
 <ul>
 <li> Feature Type: Varies </li>
@@ -116,24 +114,22 @@ The dataset for the second part is provided in a .csv file titled `auto_mpg.csv`
 ## Training and Visualization
 
 The entire training process alongside the maths involved is explained in detail in the jupyter notebook. 
-- Note: A good knowledge of Calculus is required to fully understand the gradient descent algorithm, especially the concept of partial derivatives.
+- Note: You need to be proficient in Calculus to fully understand the gradient descent algorithm, especially the concept of partial derivatives. Additionally, a good knowledge of Linear Algebra is required to understand the various matrix and vector operations that are performed in the assignment.
 
 
 ## Lessons
 
-A linear regression project can teach a variety of valuable skills and concepts, including:
+A logistic regression project can teach a variety of valuable skills and concepts, including:
 
 - Data Preprocessing: How to clean and prepare data for analysis, including handling missing values, scaling features, and encoding categorical variables.
 
 - Feature Selection: Identifying which features (variables) are most important for making predictions and how to choose them effectively.
 
-- Model Building: Understanding how to build a linear regression model, including splitting data into training and testing sets, fitting the model, and making predictions.
+- Model Building: Understanding how to build a logistic regression model, including splitting data into training and testing sets, fitting the model, and predicting outcomes.
 
 - Performance Evaluation: Using metrics like Root Mean Squared Error (RMSE) to evaluate the performance of your model and understand its accuracy.
 
-- Interpreting Results: Understanding the coefficients of the linear regression model and what they signify in terms of the relationships between variables.
-
-- Visualization: Using visualization tools to plot data, visualize the regression line, and understand the relationship between variables.
+- Interpreting Results: Understanding the results of the logistic regression model and what they signify.
 
 - Algorithm Implementation: Learning about the underlying algorithm used in linear regression and how it optimizes the line of best fit.
 
