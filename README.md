@@ -6,7 +6,8 @@
 
 # Logistic Regression Assignment
 
-This repository contains a Jupyter Notebook that demonstrates a simple implementation of logistic regression using Python. The notebook walks through the steps of loading data, preprocessing, training a logistic regression model, and visualizing the results. Alongside the Jupyter Notebook, there is also a corresponding .py python file.
+This Jupyter Notebook explores the concepts of Logistic Regression and Ridge Regression, with a particular focus on building a classifier to categorize celestial objects as either stars, galaxies, or quasars. The notebook is structured to provide a comprehensive understanding of these regression techniques, and includes practical implementations, visualizations, and model evaluations. <br> 
+
 The Logistic Regression folder contains the following files:
 - A .ipynb file (Jupyter Notebook) that contains all the code regarding the assignment including text blocks explaining portions of the code
 - A corresponding .py file
@@ -27,13 +28,16 @@ The Logistic Regression folder contains the following files:
    
 ## Introduction
 
-Linear regression is a fundamental machine-learning technique used to model the relationship between a dependent variable and one or more independent variables. This assignment provides a clear and concise example of how to implement linear regression from scratch using Python.
+Logistic regression is a statistical method used for binary or multi-class classification that models the relationship between a dependent binary variable and one or more independent variables. Unlike linear regression, which predicts continuous outcomes, logistic regression predicts the probability of an outcome.
+
+ This assignment provides a clear and concise example of how to implement multi-class logistic regression from scratch using Python.
 ## Installation Requirements
 
 To run this notebook, you will need the following packages:
 - numpy
 - pandas
 - matplotlib
+- scikit-learn
 
 You can install these packages using pip:
 
@@ -46,13 +50,23 @@ You can install these packages using pip:
 ```bash
  pip install matplotlib 
 ```
+```bash
+ pip install scikit-learn
+```
 
 Useful Links for installing Jupyter Notebook:
 - https://youtube.com/watch?v=K0B2P1Zpdqs  (MacOS)
 - https://www.youtube.com/watch?v=9V7AoX0TvSM (Windows)
 
+It's recommended to run this notebook in a conda environment to avoid dependency conflicts and to ensure smooth execution.
+<h5> Conda Environment Setup </h5>
+- Install conda.
+- Open a terminal/command prompt window in the assignment folder.
+- Run the following command to create an isolated conda environment titled AI_env with the required packages installed: ```bash conda env create -f environment.yml ```
+- Open or restart your Jupyter Notebook server or VSCode to select this environment as the kernel for your notebook.
+- Verify the installation by running: ```bash conda list -n AI_env ```
 
-    
+
 ## Project Structure
 
 The notebook is organized into the following sections:
