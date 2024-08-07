@@ -60,11 +60,14 @@ Useful Links for installing Jupyter Notebook:
 
 It's recommended to run this notebook in a conda environment to avoid dependency conflicts and to ensure smooth execution.
 <h5> Conda Environment Setup </h5>
-- Install conda.
-- Open a terminal/command prompt window in the assignment folder.
-- Run the following command to create an isolated conda environment titled AI_env with the required packages installed: ```bash conda env create -f environment.yml ```
-- Open or restart your Jupyter Notebook server or VSCode to select this environment as the kernel for your notebook.
-- Verify the installation by running: ```bash conda list -n AI_env ```
+<ul> 
+   <li> Install conda </li>
+   <li> Open a terminal/command prompt window in the assignment folder. </li>
+   <li> Run the following command to create an isolated conda environment titled AI_env with the required packages installed: conda env create -f environment.yml </li>
+   <li> Open or restart your Jupyter Notebook server or VSCode to select this environment as the kernel for your notebook. </li>
+   <li> Verify the installation by running: ```bash conda list -n AI_env ``` </li>
+   <li> Install conda </li>
+</ul>
 
 
 ## Project Structure
