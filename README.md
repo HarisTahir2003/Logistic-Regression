@@ -136,11 +136,11 @@ A logistic regression project can teach a variety of valuable skills and concept
 
 ## Screenshots
 <h3> Ridge Regression </h3>
-<h4> 1. This image shows a regression line and the data points of the <strong> training dataset </strong>, where Present_Tmax is plotted on the x-axis and Next_Tmax is plotted on the y-axis. </h4>
-<img src="pic1.png" width="400px"> <br> 
+<h4> 1. This image shows how the value of the Root-Mean-Square-Error changes for various training and testing datasets as the value of the regularization parameter (lambda) is gradually increased from 0 to 10. The four datasets include the training and testing datasets of each of the analytical and gradient-descent solutions. </h4>
+<img src="pic1.png" width="450px"> <br> 
 
-<h4> 2. This image shows a regression line and the data points of the <strong> testing dataset </strong>, where Present_Tmax is plotted on the x-axis and Next_Tmax is plotted on the y-axis. </h4>
-<img src="pic2.png" width="400px"> <br> 
+<h4> 2. This image shows the output of the regression model with the least validation Root-Mean-Square-Error overlaid on top of the original mpg vs displacement data. </h4>
+<img src="pic2.png" width="450px"> <br> 
 
 
 
