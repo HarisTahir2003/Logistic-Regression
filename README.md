@@ -11,7 +11,7 @@ This Jupyter Notebook explores the concepts of Logistic Regression and Ridge Reg
 The Logistic Regression folder contains the following files:
 - A .ipynb file (Jupyter Notebook) that contains all the code regarding the assignment including text blocks explaining portions of the code
 - A corresponding .py file
-- seven .png files that are screenshots of the plots in the Jupyter Notebook
+- two .png files that are screenshots of the plots in the Jupyter Notebook
 - a star_classification.csv file that contains the raw data for the Logistic Regression part of the assignment
 - an auto_mpg.csv file that contains the raw data for the Ridge Regression part of the assignmenton. You can download and save the .csv files in your computer and open them as Excel files for better readability.
 
